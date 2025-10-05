@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import { DataSource } from "typeorm";
 import { DATABASE, DB_USERNAME, HOST, PASSWORD, DB_PORT } from "./configEnv.js";
+import { User } from "../entities/user.entity.js";
 // Debug: mostrar los valores de conexión
 
 console.log("[DEBUG] Parámetros de conexión:");
@@ -23,7 +24,7 @@ export const AppDataSource = new DataSource({
   username: DB_USERNAME,
   password: PASSWORD,
   database: DATABASE,
-  entities: ["src/entities/**/*.js"],
+  entities: [User],
   synchronize: true, 
   logging: false,
 });

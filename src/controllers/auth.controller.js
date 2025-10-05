@@ -1,5 +1,5 @@
 import { loginUser } from "../services/auth.service.js";
-import { createUser, updateUser, deleteUser } from "../services/user.service.js";
+import { createUser } from "../services/user.service.js";
 import { handleSuccess, handleErrorClient, handleErrorServer } from "../Handlers/responseHandlers.js";
 
 export async function login(req, res) {
@@ -31,36 +31,6 @@ export async function register(req, res) {
   } catch (error) {
     if (error.code === '23505') { // Código de error de PostgreSQL para violación de unique constraint
       handleErrorClient(res, 409, "El email ya está registrado");
-    } else {
-      handleErrorServer(res, 500, "Error interno del servidor", error.message);
-    }
-  }
-}
-
-/* modificar y eliminar perfil*/
-export async function updateProfile(req, res) {
-  try {
-    const userId = req.user.id; 
-    const data = req.body;
-    const updatedUser = await updateUser(userId, data);
-    delete updatedUser.password; // Nunca devolver la contraseña
-    handleSuccess(res, 200, "Perfil actualizado exitosamente", updatedUser);
-  } catch (error) {
-    if (error.message === "Usuario no encontrado") {
-      handleErrorClient(res, 404, error.message);
-    } else {
-      handleErrorServer(res, 500, "Error interno del servidor", error.message);
-    }
-  }
-}
-export async function deleteProfile(req, res) {
-  try {
-    const userId = req.user.id;
-    await deleteUser(userId);
-    handleSuccess(res, 200, "Perfil eliminado exitosamente");
-  } catch (error) {
-    if (error.message === "Usuario no encontrado") {
-      handleErrorClient(res, 404, error.message);
     } else {
       handleErrorServer(res, 500, "Error interno del servidor", error.message);
     }
