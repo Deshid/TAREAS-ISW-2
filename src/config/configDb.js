@@ -1,14 +1,28 @@
 "use strict";
+import dotenv from "dotenv";
+dotenv.config();
 import { DataSource } from "typeorm";
 import { DATABASE, DB_USERNAME, HOST, PASSWORD, DB_PORT } from "./configEnv.js";
+// Debug: mostrar los valores de conexión
+
+console.log("[DEBUG] Parámetros de conexión:");
+console.log("HOST:", HOST);
+console.log("PORT:", DB_PORT);
+console.log("USERNAME:", DB_USERNAME);
+console.log("PASSWORD:", PASSWORD);
+console.log("DATABASE:", DATABASE);
+
+if (typeof DB_PORT === "undefined" || DB_PORT === null) {
+  throw new Error("DB_PORT no está definido. Verifica tu archivo .env y la carga de variables.");
+}
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  host: `${HOST}`,
-  port: DB_PORT,
-  username: `${DB_USERNAME}`,
-  password: `${PASSWORD}`,
-  database: `${DATABASE}`,
+  host: HOST,
+  port: Number(DB_PORT),
+  username: DB_USERNAME,
+  password: PASSWORD,
+  database: DATABASE,
   entities: ["src/entities/**/*.js"],
   synchronize: true, 
   logging: false,
